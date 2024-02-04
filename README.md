@@ -1,5 +1,5 @@
 # Soil-Classification-Using-ML
-UNN Civil Engineering Laboratory with a Team of 3 Data Scientists undertook this project of trying to use Machine Learning to classify soils based on the Unified Soil Classification System (USCS).
+UNN Civil Engineering Laboratory with a Team of 4 Data Scientists undertook this project of trying to use Machine Learning to classify soils based on the Unified Soil Classification System (USCS).
 
 ## Team Plan
 Hi Cheta, Hello Nwigwe,
