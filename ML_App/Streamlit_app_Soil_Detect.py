@@ -29,11 +29,11 @@ with st.expander('Expand to Know more about the Image Preprocessing Steps Used.'
 
 tr_data = pd.read_csv('Training-Data.csv')
 
-st.write('Model is predicting...')
 ada=AdaBoostClassifier(learning_rate=1, n_estimators=650)
 ada.fit(tr_data.drop('class', axis=1), tr_data[['class']])
 
 if file is not None:
+    st.write('Model is predicting...')
     file_bytes = np.asarray(bytearray(file.read()), dtype=np.uint8)
     img = cv.imdecode(file_bytes, 1)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
