@@ -6,6 +6,97 @@ import streamlit as st
 # Machine learning
 from sklearn.ensemble import AdaBoostClassifier
 
+def get_class_names(val):
+    name=''
+    if val==0:
+        name='GP (Poorly Graded Gravel)'
+    elif val==1:
+        name='GW (Well Graded Gravel)'
+    else:
+        name='CL (Low Plasticity Clay)'
+    return name
+
+def generate_perc_dist_columns(perc_distance=5):
+    col_names=[]
+    for dist in range(0,101,perc_distance):
+        col_names.append('perc_'+str(dist))
+    col_names.append('distance')
+    return col_names
+
+def preprocess(image, canny_x=100, canny_y=350, blend_x=0.7, blend_y=0.3):
+    # Converting to grayscale
+    image_gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+
+    # Resizing image
+    gray_resized = cv.resize(image_gray, (500,500))
+
+    # histogram equalization
+    hist_equ = cv.equalizeHist(gray_resized)
+
+    blended = blend_x*gray_resized + blend_y*hist_equ
+    blended = np.uint8(blended)
+    #plt.imshow(blended, cmap='gray')
+    #plt.show()
+
+    # Appling Canny Edge Detection
+    canny_edge_img = cv.Canny(blended, canny_x, canny_y)
+    canny_edge_img_unit = canny_edge_img/255
+
+    return canny_edge_img_unit
+
+
+# Correct get pixel sum function
+def get_pixel_sum_v2(full_image, patch_size=10):
+    values = []
+    current_row = 0
+    nxt_row = patch_size
+    current_column = 0
+    nxt_column = patch_size
+    size_x=full_image.shape[0]
+    size_y=full_image.shape[1]
+    each_loop=int(size_x/patch_size)
+
+    #print(int((size_x*size_y)/(patch_size**2)))
+    #for a in range(int((size_x*size_y)/(patch_size**2))):
+    for a in range(each_loop):
+        for b in range(each_loop):
+            patch=full_image[current_row:nxt_row, current_column:nxt_column]
+            #print(sum(patch), '=', np.sum(patch))
+            #print(current_column, nxt_column)
+            val = np.sum(patch)
+            values.append(val)
+            current_column+=patch_size
+            nxt_column+=patch_size
+        current_row+=patch_size
+        nxt_row+=patch_size
+        current_column=0
+        nxt_column=patch_size
+        #print(values)
+    return values
+
+
+def get_percentiles_distance(naive_particle_sizes, perc_distance=5, image_distance='short'):
+    percentiles = []
+    for a in range(0,101,perc_distance):
+        percentiles.append(np.percentile(naive_particle_sizes, a))
+
+    # Define range and standard deviation
+    range_min = 20  # Minimum value in the range
+    range_max = 30  # Maximum value in the range
+    std_dev = 2  # Standard deviation
+
+    # Generate a random number with specified range and standard deviation
+    random_number = np.random.normal(loc=(range_max + range_min) / 2, scale=std_dev)
+
+    # Ensure the generated number falls within the specified range
+    random_number = np.clip(random_number, range_min, range_max)
+    percentiles.append(random_number)
+
+    return percentiles
+
+    #df.loc[len(df)] = percentiles
+    #df = df.append(pd.Series(new_record, index=df.columns), ignore_index=True)
+
 # CCELD Functions
 
 def apply_area_thresholding(crack_mask, Tarea=10):
