@@ -25,6 +25,12 @@ file = st.file_uploader("Upload an image to Predict it's class", type=["jpg", "p
 with st.expander('Expand to Know more about the Image Preprocessing Steps Used.'):
     st.write('We\'re awesome')
 
+if file is not None:
+    file_bytes = np.asarray(bytearray(file.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, 1)
+    st.write('Model is predicting...')
+    seg_img = Pipeline(img)
+    st.image(seg_img)
 
 
 
