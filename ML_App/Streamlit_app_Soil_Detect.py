@@ -45,10 +45,9 @@ if file is not None:
     df_test.loc[len(df_test)] = percentiles
     prd= ada.predict(df_test)
     #st.dataframe(df_test)
-
-predict_on_img = get_class_names(prd)
-im_to_display=cv.resize(img, (300,300))
-st.image(im_to_display)
-st.write('Image class is', predict_on_img)
+    predict_on_img = get_class_names(prd)
+    im_to_display=cv.resize(img, (300,300))
+    st.image(im_to_display)
+    st.write('Image class is', predict_on_img)
 
 
