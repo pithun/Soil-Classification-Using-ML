@@ -27,7 +27,7 @@ file = st.file_uploader("Upload an image to Predict it's class", type=["jpg", "p
 with st.expander('Expand to Know more about the Image Preprocessing Steps Used.'):
     st.write('Coming Soon...')
 
-tr_data = pd.read_csv('Data/Training-Data.csv')
+tr_data = pd.read_csv('Training-Data.csv')
 
 st.write('Model is predicting...')
 ada=AdaBoostClassifier(learning_rate=1, n_estimators=650)
